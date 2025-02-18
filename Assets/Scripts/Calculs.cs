@@ -37,7 +37,7 @@ public static class Calculs
             counterD2 += matrix[2-i, i];
         }
         if (counterD1 == 3 || counterD2 == 3) return 1;
-        else if(counterD1 == -3 || counterD2 == 3)  return -1;
+        else if(counterD1 == -3 || counterD2 == -3)  return -1;
         for(int i=0; i<matrix.GetLength(0);i++)
         {
             for(int j = 0; j < matrix.GetLength(1);j++)

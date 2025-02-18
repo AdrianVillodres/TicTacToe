@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ public enum States
 }
 public class GameManager : MonoBehaviour
 {
+    public int alpha = -1000;
+    public int beta = 1000;
     public static GameManager Instance;
     public BoxCollider2D collider;
     public GameObject token1, token2;
@@ -49,20 +52,85 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitingABit()
     {
         yield return new WaitForSeconds(1f);
-        RandomAI();
+        AIMinMax();
     }
-    public void RandomAI()
+
+    public void AIMinMax()
     {
-        int x;
-        int y;
-        do
+        int bestMove = -1;
+        int bestScore = -1000;
+        alpha = -1000;
+        beta = 1000;
+
+        for (int i = 0; i < Size; i++)
         {
-            x = Random.Range(0, Size);
-            y = Random.Range(0, Size);
-        } while (Matrix[x, y] != 0);
-        DoMove(x, y, -1);
-        state = States.CanMove;
+            for (int j = 0; j < Size; j++)
+            {
+                if (Matrix[i, j] == 0)
+                {
+                    Matrix[i, j] = -1;
+                    int score = Minimax(Matrix, 5, false, alpha, beta);
+                    Matrix[i, j] = 0;
+                    if (score > bestScore)
+                    {
+                        bestScore = score;
+                        bestMove = i * Size + j;
+                    }
+                }
+            }
+        }
+        DoMove(bestMove / Size, bestMove % Size, -1);
     }
+
+    public int Minimax(int[,] board, int depth, bool isMaximizing, int alpha, int beta)
+    {
+        int result = Calculs.EvaluateWin(board);
+        if (result != 2)
+            return result;
+        if (isMaximizing)
+        {
+            int bestScore = -1000;
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    if (board[i, j] == 0)
+                    {
+                        board[i, j] = -1;
+                        int score = Minimax(board, depth + 1, false, alpha, beta);
+                        board[i, j] = 0;
+                        bestScore = Math.Max(score, bestScore);
+                        alpha = Math.Max(alpha, score);
+                        if (beta <= alpha)
+                            break;
+                    }
+                }
+            }
+            return bestScore;
+        }
+        else
+        {
+            int bestScore = 1000;
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    if (board[i, j] == 0)
+                    {
+                        board[i, j] = 1;
+                        int score = Minimax(board, depth + 1, true, alpha, beta);
+                        board[i, j] = 0;
+                        bestScore = Math.Min(score, bestScore);
+                        beta = Math.Min(beta, score);
+                        if (beta <= alpha)
+                            break;
+                    }
+                }
+            }
+            return bestScore;
+        }
+    }
+
     public void DoMove(int x, int y, int team)
     {
         Matrix[x, y] = team;
