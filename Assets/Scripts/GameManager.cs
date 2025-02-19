@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 public enum States
 {
@@ -11,6 +13,7 @@ public class GameManager : MonoBehaviour
 {
     public int alpha = -1000;
     public int beta = 1000;
+    public Canvas canvas;
     public static GameManager Instance;
     public BoxCollider2D collider;
     public GameObject token1, token2;
@@ -18,6 +21,9 @@ public class GameManager : MonoBehaviour
     public int[,] Matrix;
     [SerializeField] private States state = States.CanMove;
     public Camera camera;
+    public TextMeshProUGUI WhoWins;
+    public TextMeshProUGUI WinLose;
+    public Image Background;
     void Start()
     {
         Instance = this;
@@ -143,12 +149,31 @@ public class GameManager : MonoBehaviour
         {
             case 0:
                 Debug.Log("Draw");
+                canvas.gameObject.SetActive(true);
+                WhoWins.color = Color.blue;
+                WinLose.color = Color.blue;
+                Background.color = Color.gray;
+
+                WhoWins.text = "Anybody wins!";
+                WinLose.text = "Its a Draw!";
                 break;
             case 1:
                 Debug.Log("You Win");
+                canvas.gameObject.SetActive(true);
+                WhoWins.color = Color.white;
+                WinLose.color = Color.white;
+                Background.color = Color.green;
+                WhoWins.text = "Player wins!";
+                WinLose.text = "Congratulations!";
                 break;
             case -1:
                 Debug.Log("You Lose");
+                canvas.gameObject.SetActive(true);
+                WhoWins.color = Color.black;
+                WinLose.color = Color.black;
+                Background.color = Color.red;
+                WhoWins.text = "AI wins!";
+                WinLose.text = "Try again!";
                 break;
             case 2:
                 if (state == States.CantMove)
