@@ -15,15 +15,17 @@ public class GameManager : MonoBehaviour
     public int beta = 1000;
     public Canvas canvas;
     public static GameManager Instance;
-    public BoxCollider2D collider;
+    public new BoxCollider2D collider;
     public GameObject token1, token2;
     public int Size = 3;
     public int[,] Matrix;
     [SerializeField] private States state = States.CanMove;
-    public Camera camera;
+    public new Camera camera;
     public TextMeshProUGUI WhoWins;
     public TextMeshProUGUI WinLose;
-    public Image Background;
+    public GameObject Win;
+    public GameObject Draw;
+    public GameObject Lose;
     void Start()
     {
         Instance = this;
@@ -152,8 +154,7 @@ public class GameManager : MonoBehaviour
                 canvas.gameObject.SetActive(true);
                 WhoWins.color = Color.blue;
                 WinLose.color = Color.blue;
-                Background.color = Color.gray;
-
+                Draw.gameObject.SetActive(true);
                 WhoWins.text = "Anybody wins!";
                 WinLose.text = "Its a Draw!";
                 break;
@@ -162,7 +163,7 @@ public class GameManager : MonoBehaviour
                 canvas.gameObject.SetActive(true);
                 WhoWins.color = Color.white;
                 WinLose.color = Color.white;
-                Background.color = Color.green;
+                Win.gameObject.SetActive(true);
                 WhoWins.text = "Player wins!";
                 WinLose.text = "Congratulations!";
                 break;
@@ -171,7 +172,7 @@ public class GameManager : MonoBehaviour
                 canvas.gameObject.SetActive(true);
                 WhoWins.color = Color.black;
                 WinLose.color = Color.black;
-                Background.color = Color.red;
+                Lose.gameObject.SetActive(true);
                 WhoWins.text = "AI wins!";
                 WinLose.text = "Try again!";
                 break;
